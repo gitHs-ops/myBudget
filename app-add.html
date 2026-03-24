@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>앱 등록</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { background: #f4f6fb; color: #222; font-family: 'Noto Sans KR', sans-serif; margin: 0; }
+    .container { max-width: 420px; margin: 48px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(51,88,244,.10); padding: 36px 28px; }
+    h1 { font-size: 1.3rem; color: #3358f4; margin-bottom: 18px; }
+    label { display: block; margin-bottom: 7px; color: #4a567a; font-weight: 600; }
+    input, textarea { width: 100%; padding: 10px 12px; border: 1.5px solid #e2e8f4; border-radius: 8px; font-size: 1rem; margin-bottom: 18px; font-family: inherit; background: #f4f6fb; }
+    textarea { resize: vertical; min-height: 60px; }
+    .btn { background: #3358f4; color: #fff; border: none; border-radius: 8px; padding: 11px 0; font-size: 1.05rem; font-weight: 700; width: 100%; cursor: pointer; transition: background .15s; }
+    .btn:hover { background: #223a99; }
+    .back-link { display: block; margin-top: 18px; text-align: center; color: #3358f4; text-decoration: none; font-size: .98rem; }
+    .msg { color: #0ec7a5; font-weight: 700; text-align: center; margin-bottom: 12px; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>앱 등록</h1>
+    <form id="appForm" autocomplete="off" onsubmit="return false;">
+      <label for="name">앱 이름</label>
+      <input type="text" id="name" required maxlength="32">
+      <label for="desc">설명</label>
+      <textarea id="desc" required maxlength="80"></textarea>
+      <label for="url">바로가기 URL</label>
+      <input type="url" id="url" required placeholder="예: ai-briefing.html">
+      <button class="btn" onclick="addApp()">등록하기</button>
+    </form>
+    <a href="app-list.html" class="back-link">← 목록으로 돌아가기</a>
+    <div id="msg" class="msg"></div>
+  </div>
+  <script>
+    function addApp() {
+      const name = document.getElementById('name').value.trim();
+      const desc = document.getElementById('desc').value.trim();
+      const url = document.getElementById('url').value.trim();
+      if (!name || !desc || !url) return;
+      let apps = JSON.parse(localStorage.getItem('apps')||'[]');
+      const today = new Date();
+      const date = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
+      apps.unshift({name, desc, url, date});
+      localStorage.setItem('apps', JSON.stringify(apps));
+      document.getElementById('msg').textContent = '앱이 등록되었습니다!';
+      document.getElementById('appForm').reset();
+    }
+  </script>
+</body>
+</html>
