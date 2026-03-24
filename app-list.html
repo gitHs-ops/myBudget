@@ -78,7 +78,7 @@
         const tbody = document.getElementById('appTbody');
         tbody.innerHTML = '';
         apps.forEach((app, idx) => {
-          tbody.innerHTML += `<tr><td class="app-title">${app.name}</td><td class="desc">${app.desc}</td><td class="date">${app.date}</td><td><a href="${app.url}" class="btn">이동</a></td><td><button class="btn" style="background:#ef4444;" onclick="deleteApp(${idx})">삭제</button></td></tr>`;
+          tbody.innerHTML += `<tr><td class="app-title"><a href="app-add.html?edit=${idx}" style="color:#3358f4;text-decoration:underline;cursor:pointer;">${app.name}</a></td><td class="desc">${app.desc}</td><td class="date">${app.date}</td><td><a href="${app.url}" class="btn">이동</a></td><td><button class="btn" style="background:#ef4444;" onclick="deleteApp(${idx})">삭제</button></td></tr>`;
         });
       }
       function deleteApp(idx) {

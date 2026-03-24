@@ -20,32 +20,59 @@
 </head>
 <body>
   <div class="container">
-    <h1>앱 등록</h1>
+    <h1 id="formTitle">앱 등록</h1>
     <form id="appForm" autocomplete="off" onsubmit="return false;">
       <label for="name">앱 이름</label>
-      <input type="text" id="name" required maxlength="32">
+      <input type="text" id="name" required maxlength="32" autocomplete="off">
       <label for="desc">설명</label>
-      <textarea id="desc" required maxlength="80"></textarea>
+      <textarea id="desc" required maxlength="80" autocomplete="off"></textarea>
       <label for="url">바로가기 URL</label>
-      <input type="url" id="url" required placeholder="예: ai-briefing.html">
-      <button class="btn" onclick="addApp()">등록하기</button>
+      <input type="url" id="url" required placeholder="예: ai-briefing.html" autocomplete="off">
+      <button class="btn" id="submitBtn" onclick="addOrEditApp()">등록하기</button>
     </form>
     <a href="app-list.html" class="back-link">← 목록으로 돌아가기</a>
     <div id="msg" class="msg"></div>
   </div>
   <script>
-    function addApp() {
+    // 등록/수정 겸용
+    function getQueryParam(key) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(key);
+    }
+    const editIdx = getQueryParam('edit');
+    let apps = [];
+    try { apps = JSON.parse(localStorage.getItem('apps')||'[]'); } catch(e) { apps = []; }
+    if (editIdx !== null && apps[editIdx]) {
+      // 수정 모드: 기존 값 채우기
+      document.getElementById('formTitle').textContent = '앱 수정';
+      document.getElementById('submitBtn').textContent = '수정하기';
+      document.getElementById('name').value = apps[editIdx].name;
+      document.getElementById('desc').value = apps[editIdx].desc;
+      document.getElementById('url').value = apps[editIdx].url;
+    }
+    function addOrEditApp() {
       const name = document.getElementById('name').value.trim();
       const desc = document.getElementById('desc').value.trim();
       const url = document.getElementById('url').value.trim();
-      if (!name || !desc || !url) return;
-      let apps = JSON.parse(localStorage.getItem('apps')||'[]');
+      if (!name || !desc || !url) {
+        document.getElementById('msg').textContent = '모든 항목을 입력해 주세요.';
+        return;
+      }
+      let apps = [];
+      try { apps = JSON.parse(localStorage.getItem('apps')||'[]'); } catch(e) { apps = []; }
       const today = new Date();
       const date = today.getFullYear() + '-' + String(today.getMonth()+1).padStart(2,'0') + '-' + String(today.getDate()).padStart(2,'0');
-      apps.unshift({name, desc, url, date});
+      if (editIdx !== null && apps[editIdx]) {
+        // 수정
+        apps[editIdx] = {name, desc, url, date};
+        document.getElementById('msg').textContent = '앱이 수정되었습니다! 목록으로 이동합니다...';
+      } else {
+        // 등록
+        apps.unshift({name, desc, url, date});
+        document.getElementById('msg').textContent = '앱이 등록되었습니다! 목록으로 이동합니다...';
+      }
       localStorage.setItem('apps', JSON.stringify(apps));
-      document.getElementById('msg').textContent = '앱이 등록되었습니다!';
-      document.getElementById('appForm').reset();
+      setTimeout(function(){ window.location.href = 'app-list.html'; }, 900);
     }
   </script>
 </body>
