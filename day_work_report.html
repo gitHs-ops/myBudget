@@ -275,29 +275,6 @@
     // Initial render
     renderList(1);
     </script>
-  </body>
-  </html>
-        // 모달 닫기 버튼
-        document.getElementById('closeModalBtn').onclick = function() {
-          document.getElementById('fileModal').style.display = 'none';
-          document.getElementById('fileModalContent').innerHTML = '';
-          document.getElementById('fileModalTitle').textContent = '';
-        };
-        // 모달 바깥 클릭 시 닫기
-        document.getElementById('fileModal').onclick = function(e) {
-          if(e.target === this) {
-            this.style.display = 'none';
-            document.getElementById('fileModalContent').innerHTML = '';
-            document.getElementById('fileModalTitle').textContent = '';
-          }
-        };
-    });
-    // 페이징 버튼 클릭
-    document.getElementById('pagingNav').addEventListener('click', function(e) {
-      if(e.target.classList.contains('page-btn')) {
-        const page = parseInt(e.target.getAttribute('data-page'));
-        if(!isNaN(page)) {
-          renderList(page);
         }
       }
     });
