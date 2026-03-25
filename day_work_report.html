@@ -106,7 +106,15 @@
         tr.innerHTML = `
           <td>${item.date}</td>
           <td><a href="#" class="edit-link" data-idx="${idx}" style="color:var(--primary);text-decoration:underline;cursor:pointer;">${item.content}</a></td>
-          <td>${item.fileName ? `<a href="${item.fileUrl}" target="_blank">${item.fileName}</a>` : ''}</td>
+          <td>${item.fileName ? (() => {
+            const ext = item.fileName.split('.').pop().toLowerCase();
+            const viewable = ['txt','html','htm','md','csv','json','js','css'];
+            if (viewable.includes(ext)) {
+              return `<a href="${item.fileUrl}" target="_blank" rel="noopener">${item.fileName}</a>`;
+            } else {
+              return `<a href="${item.fileUrl}" target="_blank" rel="noopener" download="${item.fileName}">${item.fileName}</a>`;
+            }
+          })() : ''}</td>
           <td><button class="delete-btn" data-idx="${idx}">삭제</button></td>
         `;
         tbody.appendChild(tr);
