@@ -63,7 +63,10 @@
   </nav>
   <div class="container" style="position:relative;z-index:1;">
     <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;">
-      <h1 style="margin-bottom:0;">앱 목록 게시판</h1>
+      <h1 style="margin-bottom:0;display:flex;align-items:center;gap:16px;">
+        앱 목록 게시판
+        <span id="verInfo" style="font-size:.98rem;font-weight:500;color:#8893b0;"></span>
+      </h1>
       <a href="app-add.html" class="btn" style="padding:9px 20px;font-size:.98rem;">+ 앱 추가</a>
     </div>
     <div class="subtitle">최신 앱과 도구를 한눈에 확인하고 바로 이동하세요.</div>
@@ -82,6 +85,21 @@
       </tbody>
     </table>
     <script>
+      // 버전 자동증가 및 날짜 표시
+      (function(){
+        const verKey = 'appListVer';
+        let ver = parseInt(localStorage.getItem(verKey)||'0',10);
+        ver = isNaN(ver) ? 1 : ver+1;
+        localStorage.setItem(verKey, ver);
+        const today = new Date();
+        const y = today.getFullYear();
+        const m = ('0'+(today.getMonth()+1)).slice(-2);
+        const d = ('0'+today.getDate()).slice(-2);
+        document.addEventListener('DOMContentLoaded', function(){
+          const el = document.getElementById('verInfo');
+          if(el) el.textContent = `Ver ${ver} (${y}-${m}-${d})`;
+        });
+      })();
       // 기본 앱 목록 (초기 3개)
       const defaultApps = [
         {name:'데일리 브리핑',desc:'오늘의 주요 이슈, 날씨, 증시를 한눈에!',url:'ai-briefing.html',date:'2026-03-24'},
