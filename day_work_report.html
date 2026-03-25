@@ -78,7 +78,23 @@
     <table>
       <thead>
         <tr>
-          <th style="width:120px">등록일시</th>
+          <th style="width:120px">등록일시
+            <button id="sortAscBtn" title="오름차순" style="border:none;background:none;padding:0 2px;cursor:pointer;vertical-align:middle;">
+              <span style="font-size:1rem;">▲</span>
+            </button>
+            <button id="sortDescBtn" title="내림차순" style="border:none;background:none;padding:0 2px;cursor:pointer;vertical-align:middle;">
+              <span style="font-size:1rem;">▼</span>
+            </button>
+          </th>
+              let sortOrder = 'desc'; // 기본: 최신순
+              function parseDateStr(dateStr) {
+                // 'YYYY.MM.DD HH:mm:ss' → Date 객체
+                const [datePart, timePart] = dateStr.split(' ');
+                const [y,m,d] = datePart.split('.').map(Number);
+                let h=0,mi=0,s=0;
+                if(timePart) [h,mi,s] = timePart.split(':').map(Number);
+                return new Date(y, m-1, d, h, mi, s);
+              }
           <th>작업 내용</th>
           <th style="width:120px">문서 파일</th>
           <th style="width:80px">삭제</th>
@@ -133,7 +149,13 @@
 
     function renderList(page) {
       setPageTitle();
-      const list = loadList();
+      let list = loadList();
+      // 정렬
+      list.sort((a,b)=>{
+        const da = parseDateStr(a.date);
+        const db = parseDateStr(b.date);
+        return sortOrder==='asc' ? da-db : db-da;
+      });
       const tbody = document.getElementById('workList');
       const pagingNav = document.getElementById('pagingNav');
       tbody.innerHTML = '';
@@ -177,13 +199,24 @@
         navHtml += `<button class="page-btn" data-page="1" ${currentPage===1?'disabled':''}>&laquo;</button>`;
         navHtml += `<button class="page-btn" data-page="${currentPage-1}" ${currentPage===1?'disabled':''}>&lt;</button>`;
         for(let p=1;p<=totalPages;p++) {
-          navHtml += `<button class="page-btn" data-page="${p}" ${currentPage===p?'style=\'background:var(--primary);color:#fff;font-weight:700\'':''}>${p}</button>`;
+          navHtml += `<button class="page-btn" data-page="${p}" ${currentPage===p?'style=\'background:var(--primary);color:#fff;font-weight:700\':''}>${p}</button>`;
         }
         navHtml += `<button class="page-btn" data-page="${currentPage+1}" ${currentPage===totalPages?'disabled':''}>&gt;</button>`;
         navHtml += `<button class="page-btn" data-page="${totalPages}" ${currentPage===totalPages?'disabled':''}>&raquo;</button>`;
         pagingNav.innerHTML = navHtml;
       }
     }
+        // 정렬 버튼 이벤트
+        document.addEventListener('DOMContentLoaded', function() {
+          document.getElementById('sortAscBtn').onclick = function(e) {
+            sortOrder = 'asc';
+            renderList(1);
+          };
+          document.getElementById('sortDescBtn').onclick = function(e) {
+            sortOrder = 'desc';
+            renderList(1);
+          };
+        });
     // Add new work
     document.getElementById('addForm').addEventListener('submit', function(e) {
       e.preventDefault();
