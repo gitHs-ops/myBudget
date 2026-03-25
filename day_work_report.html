@@ -62,8 +62,9 @@
 <body>
   <div class="container">
     <h1>개발 일지 목록</h1>
-    <form class="add-form" id="addForm" autocomplete="off">
+    <form class="add-form" id="addForm" autocomplete="off" enctype="multipart/form-data">
       <input type="text" id="workInput" placeholder="작업 내용을 입력하세요" required maxlength="200">
+      <input type="file" id="fileInput" style="flex:1;min-width:0;">
       <button type="submit">등록</button>
     </form>
     <table>
@@ -71,6 +72,7 @@
         <tr>
           <th style="width:120px">등록일</th>
           <th>작업 내용</th>
+          <th style="width:120px">문서 파일</th>
           <th style="width:80px">삭제</th>
         </tr>
       </thead>
@@ -95,14 +97,16 @@
       const tbody = document.getElementById('workList');
       tbody.innerHTML = '';
       if(list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;color:#b0b8c9;padding:32px 0;">등록된 작업이 없습니다</td></tr>';
+        tbody.innerHTML = '<tr><td colspan="4" style="text-align:center;color:#b0b8c9;padding:32px 0;">등록된 작업이 없습니다</td></tr>';
         return;
       }
       list.forEach((item, idx) => {
         const tr = document.createElement('tr');
+        // 작업 내용 클릭 시 수정 화면 이동 (edit page: edit_work.html?idx=...)
         tr.innerHTML = `
           <td>${item.date}</td>
-          <td>${item.content}</td>
+          <td><a href="#" class="edit-link" data-idx="${idx}" style="color:var(--primary);text-decoration:underline;cursor:pointer;">${item.content}</a></td>
+          <td>${item.fileName ? `<a href="${item.fileUrl}" target="_blank">${item.fileName}</a>` : ''}</td>
           <td><button class="delete-btn" data-idx="${idx}">삭제</button></td>
         `;
         tbody.appendChild(tr);
@@ -112,14 +116,35 @@
     document.getElementById('addForm').addEventListener('submit', function(e) {
       e.preventDefault();
       const input = document.getElementById('workInput');
+      const fileInput = document.getElementById('fileInput');
       const content = input.value.trim();
       if(!content) return;
       const today = new Date();
       const dateStr = today.getFullYear() + '.' + String(today.getMonth()+1).padStart(2,'0') + '.' + String(today.getDate()).padStart(2,'0');
+      let fileName = '', fileUrl = '';
+      if(fileInput.files && fileInput.files[0]) {
+        const file = fileInput.files[0];
+        fileName = file.name;
+        // 파일을 base64로 저장 (로컬 저장소 한계 내에서)
+        const reader = new FileReader();
+        reader.onload = function(evt) {
+          fileUrl = evt.target.result;
+          const list = loadList();
+          list.unshift({date: dateStr, content, fileName, fileUrl});
+          saveList(list);
+          input.value = '';
+          fileInput.value = '';
+          renderList();
+        };
+        reader.readAsDataURL(file);
+        return;
+      }
+      // 파일 없을 때 바로 저장
       const list = loadList();
-      list.unshift({date: dateStr, content});
+      list.unshift({date: dateStr, content, fileName, fileUrl});
       saveList(list);
       input.value = '';
+      fileInput.value = '';
       renderList();
     });
     // Delete work
@@ -130,6 +155,11 @@
         list.splice(idx,1);
         saveList(list);
         renderList();
+      }
+      // 작업 내용 클릭 시 수정 화면 이동
+      if(e.target.classList.contains('edit-link')) {
+        const idx = e.target.getAttribute('data-idx');
+        window.location.href = `edit_work.html?idx=${idx}`;
       }
     });
     // Initial render
