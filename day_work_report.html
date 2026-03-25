@@ -23,7 +23,7 @@
       background:var(--surface);border-radius:18px;box-shadow:var(--shadow-lg);
     }
     h1{
-      font-size:2.1rem;font-weight:900;margin-bottom:32px;text-align:center;letter-spacing:-.02em;
+      font-size:1.05rem;font-weight:900;margin-bottom:32px;text-align:center;letter-spacing:-.02em;
     }
     .add-form{
       display:flex;gap:12px;margin-bottom:32px;justify-content:center;align-items:center;
@@ -144,7 +144,7 @@
         let fileCell = '';
         if (item.fileName && item.fileUrl) {
           const ext = item.fileName.split('.').pop().toLowerCase();
-          const viewable = ['txt', 'html', 'htm', 'md', 'csv', 'json', 'js', 'css'];
+          const viewable = ['txt', 'html', 'htm', 'md', 'csv', 'json', 'js', 'css', 'jpg', 'jpeg', 'png', 'gif', 'webp', 'svg', 'pdf'];
           if (viewable.includes(ext)) {
             fileCell = `<a href="#" class="view-file" data-idx="${i}" style="color:var(--primary)">${item.fileName}</a>`;
           } else {
@@ -249,21 +249,28 @@
         const item = list[idx];
         if(item && item.fileUrl && item.fileName) {
           const ext = item.fileName.split('.').pop().toLowerCase();
-          fetch(item.fileUrl)
-            .then(res => res.text())
-            .then(text => {
-              const modal = document.getElementById('fileModal');
-              const contentDiv = document.getElementById('fileModalContent');
-              const titleDiv = document.getElementById('fileModalTitle');
-              titleDiv.textContent = item.fileName;
-              if(ext === 'html' || ext === 'htm') {
-                // HTML은 iframe으로 렌더링
-                contentDiv.innerHTML = `<iframe srcdoc="${text.replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" style="width:100%;height:60vh;border:none;"></iframe>`;
-              } else {
-                contentDiv.textContent = text;
-              }
+          const modal = document.getElementById('fileModal');
+          const contentDiv = document.getElementById('fileModalContent');
+          const titleDiv = document.getElementById('fileModalTitle');
+          titleDiv.textContent = item.fileName;
+          const images = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
+          if(images.includes(ext)) {
+            contentDiv.innerHTML = `<img src="${item.fileUrl}" style="max-width:100%;max-height:65vh;display:block;margin:0 auto;border-radius:6px;">`;
+            modal.style.display = 'flex';
+          } else if(ext === 'pdf') {
+            contentDiv.innerHTML = `<iframe src="${item.fileUrl}" style="width:100%;height:65vh;border:none;"></iframe>`;
+            modal.style.display = 'flex';
+          } else if(ext === 'html' || ext === 'htm') {
+            fetch(item.fileUrl).then(res => res.text()).then(text => {
+              contentDiv.innerHTML = `<iframe srcdoc="${text.replace(/"/g,'&quot;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}" style="width:100%;height:60vh;border:none;"></iframe>`;
               modal.style.display = 'flex';
             });
+          } else {
+            fetch(item.fileUrl).then(res => res.text()).then(text => {
+              contentDiv.textContent = text;
+              modal.style.display = 'flex';
+            });
+          }
         }
       }
       // 모달 닫기 버튼
