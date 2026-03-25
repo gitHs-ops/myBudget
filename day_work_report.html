@@ -231,17 +231,22 @@
 
     // Delete work & file view & edit
     document.getElementById('workList').addEventListener('click', function(e) {
-      if(e.target.classList.contains('delete-btn')) {
-        const idx = e.target.getAttribute('data-idx');
+      const deleteBtn = e.target.closest('.delete-btn');
+      if(deleteBtn) {
+        e.stopPropagation();
+        const idx = deleteBtn.getAttribute('data-idx');
         const list = loadList();
         list.splice(idx,1);
         saveList(list);
         renderList();
+        return;
       }
       // 작업 내용 클릭 시 수정 화면 이동
       if(e.target.classList.contains('edit-link')) {
+        e.preventDefault();
         const idx = e.target.getAttribute('data-idx');
         window.location.href = `edit_work.html?idx=${idx}`;
+        return;
       }
       // 텍스트/HTML 파일 보기 (모달)
       if(e.target.classList.contains('view-file')) {
