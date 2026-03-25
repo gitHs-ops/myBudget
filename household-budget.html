@@ -449,11 +449,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">연도</label>
-          <select class="form-select" id="fYear">
-            <option>2026</option><option>2025</option><option>2024</option>
-            <option>2023</option><option>2022</option><option>2021</option>
-            <option>2020</option><option>2019</option>
-          </select>
+          <select class="form-select" id="fYear"></select>
         </div>
         <div class="form-group">
           <label class="form-label">월</label>
@@ -865,6 +861,16 @@ function showToast(msg) {
 }
 
 // ── 초기화 ───────────────────────────
+(function initYearSelect() {
+  const sel = document.getElementById('fYear');
+  const cur = new Date().getFullYear();
+  for (let y = cur + 20; y >= cur - 20; y--) {
+    const opt = document.createElement('option');
+    opt.value = y;
+    opt.textContent = y;
+    sel.appendChild(opt);
+  }
+})();
 loadData();
 render();
 </script>
