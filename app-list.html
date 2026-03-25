@@ -18,7 +18,7 @@
     body::before {
       content: none;
     }
-    .container { max-width: 1040px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(51,88,244,.10); padding: 40px 32px; position:relative; z-index:1; }
+    .container { max-width: 900px; margin: 40px auto; background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(51,88,244,.10); padding: 40px 32px; position:relative; z-index:1; }
     .nav { background: #fff; border-bottom: 1.5px solid #e2e8f4; height: 60px; display: flex; align-items: center; justify-content: space-between; padding: 0 40px; box-shadow: 0 2px 8px rgba(51,88,244,.04); }
     .nav-logo { font-weight: 800; font-size: 1.1rem; color: #3358f4; letter-spacing: -0.02em; }
     .nav-menu { display: flex; gap: 24px; }
@@ -77,19 +77,27 @@
       </tbody>
     </table>
     <script>
-      // 버전 자동증가 및 날짜 표시
+      // 버전 자동증가 및 날짜 표시 (1.0부터 시작, 0.1씩 증가, 날짜 바뀌면 1.0으로 리셋)
       (function(){
         const verKey = 'appListVer';
-        let ver = parseInt(localStorage.getItem(verKey)||'0',10);
-        ver = isNaN(ver) ? 1 : ver+1;
-        localStorage.setItem(verKey, ver);
         const today = new Date();
         const y = today.getFullYear();
         const m = ('0'+(today.getMonth()+1)).slice(-2);
         const d = ('0'+today.getDate()).slice(-2);
+        const dateStr = `${y}-${m}-${d}`;
+        let verObj = {v: 1.0, date: dateStr};
+        try {
+          verObj = JSON.parse(localStorage.getItem(verKey)) || verObj;
+        } catch(e) {}
+        if (verObj.date !== dateStr) {
+          verObj = {v: 1.0, date: dateStr};
+        } else {
+          verObj.v = Math.round((verObj.v + 0.1) * 10) / 10;
+        }
+        localStorage.setItem(verKey, JSON.stringify(verObj));
         document.addEventListener('DOMContentLoaded', function(){
           const el = document.getElementById('verInfo');
-          if(el) el.textContent = `Ver ${ver} (${y}-${m}-${d})`;
+          if(el) el.textContent = `Ver ${verObj.v.toFixed(1)} (${dateStr})`;
         });
       })();
       // 기본 앱 목록 (초기 3개)
