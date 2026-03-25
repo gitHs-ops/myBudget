@@ -505,16 +505,95 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 // 데이터 (스크린샷 기반 초기 데이터)
 // ════════════════════════════════════════
 let DATA = [
-  // 2026
-  { id:1, year:2026, month:3, kb:5, kbm:480, deposit:0, saving:160, details:[] },
-  // 2022
-  { id:2, year:2022, month:12, kb:5, kbm:900, deposit:1000, saving:null, details:['핀트 20만·미에 100만','일본투어 165만'] },
-  { id:3, year:2022, month:11, kb:10, kbm:930, deposit:1000, saving:null, details:['핀트 20만·미래셋 100만','스키 지출 300만'] },
-  { id:4, year:2022, month:10, kb:1500, kbm:600, deposit:null, saving:null, details:['카뱅 서브 50만','핀트 20만','데크 지붕 공사 지출 100만','돔 구입 외 200만'] },
-  { id:5, year:2022, month:9, kb:1500, kbm:500, deposit:null, saving:null, details:['내역 3건'] },
-  { id:6, year:2022, month:8, kb:1500, kbm:450, deposit:null, saving:null, details:['내역 3건'] },
-  { id:7, year:2022, month:7, kb:1500, kbm:450, deposit:null, saving:null, details:['내역 3건'] },
-  { id:8, year:2022, month:6, kb:1500, kbm:500, deposit:null, saving:null, details:['내역 4건'] },
+  // ── 2026 ──
+  { id:1,  year:2026, month:3,  kb:5,    kbm:480,  deposit:0,    saving:160,  details:['연금 170만','미래애셋 1100만','정기예금 해지 500만'] },
+  { id:2,  year:2026, month:2,  kb:5,    kbm:320,  deposit:500,  saving:140,  details:['연금 70만','보험해지 520만','720만 미래에셋 신규 투자','200만 미래에셋 신규 투자(신소정)','악사 차보험 45만','엔진오일 필터 15만','노트북 40만'] },
+  { id:3,  year:2026, month:1,  kb:0,    kbm:320,  deposit:1000, saving:120,  details:['마이너스 통장 300 신청','테포피아 년회비 15만','국고환급 30만','저스 70만 지출'] },
+  // ── 2025 ──
+  { id:4,  year:2025, month:12, kb:0,    kbm:280,  deposit:1000, saving:100,  details:['주식 180만'] },
+  { id:5,  year:2025, month:11, kb:0,    kbm:285,  deposit:1035, saving:100,  details:['핀트 35만 미에 116만','현금 1만','신 지원금 50만','타이어 40만'] },
+  { id:6,  year:2025, month:10, kb:0,    kbm:225,  deposit:1035, saving:80,   details:['핀트 35만 미에 116만','현금 10만','적금 20만'] },
+  { id:7,  year:2025, month:9,  kb:0,    kbm:270,  deposit:1025, saving:60,   details:['핀트 21만 미에 90만','민생 10만','뮤카 52천원','현금 10만','적금 20만','자재 자원비 50만'] },
+  { id:8,  year:2025, month:8,  kb:0,    kbm:260,  deposit:1000, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','만년필 베개 30만','적금 20만','차량 수리비 20만'] },
+  { id:9,  year:2025, month:7,  kb:10,   kbm:250,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','민생 20만','스키복 80만'] },
+  { id:10, year:2025, month:6,  kb:21,   kbm:240,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','테니스 60만'] },
+  { id:11, year:2025, month:5,  kb:21,   kbm:320,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','테무 100만','청소기 40만'] },
+  { id:12, year:2025, month:4,  kb:21,   kbm:400,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','테무 60만'] },
+  { id:13, year:2025, month:3,  kb:21,   kbm:460,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','후라노 60만'] },
+  { id:14, year:2025, month:2,  kb:21,   kbm:520,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','자보 55만','후라노 230만'] },
+  { id:15, year:2025, month:1,  kb:21,   kbm:770,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원'] },
+  // ── 2024 ──
+  { id:16, year:2024, month:12, kb:21,   kbm:850,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','테니스 60만 지출'] },
+  { id:17, year:2024, month:11, kb:21,   kbm:850,  deposit:1070, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:18, year:2024, month:10, kb:21,   kbm:800,  deposit:1040, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:19, year:2024, month:9,  kb:21,   kbm:830,  deposit:1040, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','보일러 70만'] },
+  { id:20, year:2024, month:8,  kb:21,   kbm:920,  deposit:1040, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:21, year:2024, month:7,  kb:23,   kbm:990,  deposit:1040, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','테니스3개월치 -27만'] },
+  { id:22, year:2024, month:6,  kb:23,   kbm:980,  deposit:1040, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:23, year:2024, month:5,  kb:0,    kbm:990,  deposit:1030, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:24, year:2024, month:4,  kb:0,    kbm:980,  deposit:1030, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:25, year:2024, month:3,  kb:0,    kbm:1000, deposit:1030, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만'] },
+  { id:26, year:2024, month:2,  kb:0,    kbm:1050, deposit:1030, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 10만','나무 -10만','시즌권 -20만','쇼파 50만'] },
+  { id:27, year:2024, month:1,  kb:0,    kbm:670,  deposit:1000, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','어깨치료 18만','연금 5회차 490만'] },
+  // ── 2023 ──
+  { id:28, year:2023, month:12, kb:20,   kbm:920,  deposit:1000, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 0만','도어락 18만','스키강습 시즌권 240만 지출','김명일코치 50만'] },
+  { id:29, year:2023, month:11, kb:20,   kbm:1130, deposit:1000, saving:null, details:['핀트 21만 미에 80만','뮤카 52천원','현금 30만','엔화 30만 보유'] },
+  { id:30, year:2023, month:10, kb:20,   kbm:970,  deposit:1000, saving:null, details:['핀트 21만 미에 110만','뮤카 52천원','현금 30만','엔화 30만 보유'] },
+  { id:31, year:2023, month:9,  kb:20,   kbm:1020, deposit:1000, saving:null, details:['핀트 21만 미에 110만','뮤카 52천원','용돈 40만','엔화 30만 보유','테니스 21만 11월치 선불','시즌권 42만'] },
+  { id:32, year:2023, month:8,  kb:20,   kbm:1010, deposit:1000, saving:null, details:['핀트 21만 미에 110만','뮤카 52천원','엔화 30만 보유','자재 지출 220만','숯 22만 테니스 21만','스피커 30만','이케아 30만'] },
+  { id:33, year:2023, month:7,  kb:20,   kbm:1150, deposit:1000, saving:null, details:['핀트 21만 미에 110만','엔화 30만 보유','테니스 71만 지출'] },
+  { id:34, year:2023, month:6,  kb:25,   kbm:1260, deposit:1000, saving:null, details:['핀트 21만 미에 110만','엔화 30만 보유'] },
+  { id:35, year:2023, month:5,  kb:35,   kbm:1225, deposit:1000, saving:null, details:['핀트 21만 미에 105만','갓산 엔화 50만 지출'] },
+  { id:36, year:2023, month:4,  kb:6,    kbm:1220, deposit:1000, saving:null, details:['핀트 21만 미에 105만','갓산 항공 40만'] },
+  { id:37, year:2023, month:3,  kb:3,    kbm:1200, deposit:1000, saving:null, details:['핀트 20만 미에 102만 오모테나시 30만','타이어 30만 테니스 20만','갓산 110만'] },
+  { id:38, year:2023, month:2,  kb:5,    kbm:1130, deposit:1000, saving:null, details:['액정 37만 차보 63만 티비 30만','테니스 18만'] },
+  { id:39, year:2023, month:1,  kb:5,    kbm:1150, deposit:1000, saving:null, details:['핀트 20만 미에 100만','연금보험4회차 480만'] },
+  // ── 2022 ──
+  { id:40, year:2022, month:12, kb:5,    kbm:900,  deposit:1000, saving:null, details:['핀트 20만 미에 100만','일본투어 165만'] },
+  { id:41, year:2022, month:11, kb:10,   kbm:930,  deposit:1000, saving:null, details:['핀트 20만 미래에셋 100만','스키 지출 300만'] },
+  { id:42, year:2022, month:10, kb:1500, kbm:600,  deposit:null, saving:null, details:['카뱅 서브 50만','핀트 20만','데크 지붕 공사 지출 100만','돔 구입 외 200만'] },
+  { id:43, year:2022, month:9,  kb:1500, kbm:500,  deposit:null, saving:null, details:['카카오페이 20만','허리디스크 100만'] },
+  { id:44, year:2022, month:8,  kb:1500, kbm:450,  deposit:null, saving:null, details:['카카오페이 20만','장작 80만'] },
+  { id:45, year:2022, month:7,  kb:1500, kbm:450,  deposit:null, saving:null, details:['카카오페이 40만','환전 80만'] },
+  { id:46, year:2022, month:6,  kb:1500, kbm:500,  deposit:null, saving:null, details:['카카오페이','금융포인트 50만 입금','뉴질 500만 출금'] },
+  { id:47, year:2022, month:5,  kb:1700, kbm:560,  deposit:null, saving:null, details:['카뱅 서브 350만','카카오페이 30만','물문제 100만'] },
+  { id:48, year:2022, month:4,  kb:1700, kbm:500,  deposit:null, saving:null, details:['카뱅 서브 580만','카카오페이 50만','자재 50만'] },
+  { id:49, year:2022, month:3,  kb:2500, kbm:280,  deposit:null, saving:null, details:['카뱅 서브 180만','2층침대 50만 자재 50만','뉴질랜드 1차 300만'] },
+  { id:50, year:2022, month:2,  kb:2800, kbm:270,  deposit:null, saving:null, details:['카뱅 서브 180만','카카오페이 미니금고 50만','차고 -100만 돔텐트 -250만'] },
+  { id:51, year:2022, month:1,  kb:3000, kbm:200,  deposit:null, saving:null, details:['카뱅 서브 30만','연금 3회차 500만 ㅡ 20만 세금','차량 100만'] },
+  // ── 2021 ──
+  { id:52, year:2021, month:12, kb:3000, kbm:400,  deposit:null, saving:null, details:['카뱅 서브 -100만','카카오페이 70만','차량 100만'] },
+  { id:53, year:2021, month:11, kb:3000, kbm:400,  deposit:null, saving:null, details:['카뱅 서브 -40만','카카오페이 120만','차량 100만'] },
+  { id:54, year:2021, month:10, kb:3000, kbm:210,  deposit:null, saving:null, details:['카뱅 서브 50만','카카오페이 120만','미니금고 220만','차량 100만'] },
+  { id:55, year:2021, month:9,  kb:3000, kbm:310,  deposit:null, saving:null, details:['카뱅 서브 -50만','카카오페이 150만','차량 100만'] },
+  { id:56, year:2021, month:8,  kb:3000, kbm:200,  deposit:null, saving:null, details:['카카오페이 170만','자재 100만','차량 100만'] },
+  { id:57, year:2021, month:7,  kb:3025, kbm:330,  deposit:null, saving:null, details:['카카오페이 200만','임플란트 200만','자재 100만','차량 100만'] },
+  { id:58, year:2021, month:6,  kb:3150, kbm:500,  deposit:null, saving:null, details:['카카오페이 400만','이케아 50만','차량 100만','카드 240만'] },
+  { id:59, year:2021, month:5,  kb:3200, kbm:500,  deposit:null, saving:null, details:['카카오페이 400만','텐트 100만','이케아 50만','차량 100만','에어컨 120만'] },
+  { id:60, year:2021, month:4,  kb:3400, kbm:480,  deposit:null, saving:null, details:['카카오페이 430만','쿠팡결제 400만','차량 100만','건강검진 60만','소나무 20만','그네 30만','에어컨 65만','건조기 50만'] },
+  { id:61, year:2021, month:3,  kb:4200, kbm:360,  deposit:null, saving:null, details:['카카오페이 430만','펀드 130만','차량 1400만','집짓기 700만','차보험외 100만','전기선 200만','타이어 140만','에코우드 100만','펠릿·월풀·벨텐트 각 70만','테이블쏘 60만 용접기외 50만','월방 120만 포크레인 100만','문짝 20만','쿠팡 월 300만'] },
+  // ── 2020 ──
+  { id:62, year:2020, month:12, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 140만'] },
+  { id:63, year:2020, month:11, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 260만','대출 500만'] },
+  { id:64, year:2020, month:10, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 -40만'] },
+  { id:65, year:2020, month:9,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 50만','화목난로 67만','샤시 43만','에비 60만'] },
+  { id:66, year:2020, month:8,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 250만','장작 60만','에비 120만'] },
+  { id:67, year:2020, month:6,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 260만','과소비 240만'] },
+  { id:68, year:2020, month:5,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 500만','과소비 200만'] },
+  { id:69, year:2020, month:4,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 700만','과소비 160만'] },
+  { id:70, year:2020, month:3,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 860만'] },
+  { id:71, year:2020, month:2,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 900만'] },
+  { id:72, year:2020, month:1,  kb:null, kbm:null, deposit:null, saving:null, details:['잔고 900만','연금1회차 500만 입금'] },
+  // ── 2019 ──
+  { id:73, year:2019, month:12, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 510만','스키비용 150만'] },
+  { id:74, year:2019, month:11, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 700만','보험대출 1000만'] },
+  { id:75, year:2019, month:10, kb:null, kbm:null, deposit:null, saving:null, details:['잔고 120만','권교수 200만 대여금'] },
+  { id:76, year:2019, month:9,  kb:100, kbm:300,  deposit:null, saving:null, details:['카뱅 서브 100만','맘 입금 100만','일본입금 300만'] },
+  { id:77, year:2019, month:8,  kb:40,  kbm:240,  deposit:null, saving:null, details:['일본수입금 500만','전정삼 150만'] },
+  { id:78, year:2019, month:7,  kb:20,  kbm:200,  deposit:null, saving:null, details:[] },
+  { id:79, year:2019, month:6,  kb:150, kbm:250,  deposit:null, saving:null, details:['뉴질 300만','전기자재구입 50만','차량 밧데리 에어컨 160만','300만 입금 카드결제 200만'] },
+  { id:80, year:2019, month:5,  kb:400, kbm:250,  deposit:null, saving:null, details:[] },
+  { id:81, year:2019, month:4,  kb:170, kbm:250,  deposit:null, saving:null, details:['희맘 100만','뉴질 200만','정삼 100만','출장'] },
 ];
 let editId = null;
 let currentFilter = 'all';
@@ -523,10 +602,17 @@ let currentFilter = 'all';
 function saveData() {
   try { localStorage.setItem('hb_data', JSON.stringify(DATA)); } catch(e){}
 }
+const DATA_VERSION = '2';
 function loadData() {
   try {
-    const saved = localStorage.getItem('hb_data');
-    if(saved) DATA = JSON.parse(saved);
+    const version = localStorage.getItem('hb_version');
+    if(version === DATA_VERSION) {
+      const saved = localStorage.getItem('hb_data');
+      if(saved) DATA = JSON.parse(saved);
+    } else {
+      saveData();
+      localStorage.setItem('hb_version', DATA_VERSION);
+    }
   } catch(e){}
 }
 
