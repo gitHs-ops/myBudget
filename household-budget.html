@@ -196,6 +196,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 .modal {
   background:var(--surface); border-radius:18px;
   width:100%; max-width:480px;
+  max-height:90vh; display:flex; flex-direction:column;
   box-shadow:0 24px 64px rgba(0,0,0,.18);
   animation:slideUp .25s ease; overflow:hidden;
 }
@@ -214,7 +215,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   transition:all .15s;
 }
 .modal-close:hover { border-color:var(--danger); color:var(--danger); }
-.modal-body { padding:20px 24px; }
+.modal-body { padding:20px 24px; overflow-y:auto; flex:1; }
 .form-group { margin-bottom:16px; }
 .form-label { font-size:.78rem; font-weight:700; color:var(--sub); display:block; margin-bottom:6px; }
 .form-input, .form-select {
