@@ -92,9 +92,12 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   background:var(--surface);
   border:1px solid var(--border);
   border-radius:16px;
-  overflow:hidden;
+  overflow-x:auto;
+  overflow-y:hidden;
   box-shadow:var(--shadow);
+  -webkit-overflow-scrolling:touch;
 }
+.t-head, .t-row { min-width:960px; }
 
 /* ── TABLE HEAD ── */
 .t-head {
@@ -353,7 +356,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   .summary-grid { grid-template-columns:1fr 1fr; }
   .sum-card.card-date { grid-column:1/-1; }
   .app-header,.summary-section,.filter-section,.table-section { padding-left:16px; padding-right:16px; }
-  .t-head,.t-row { grid-template-columns:70px 75px 75px 85px 70px 75px 85px 75px 1fr; font-size:.72rem; }
+  .t-head,.t-row { font-size:.78rem; }
 }
 </style>
 </head>
