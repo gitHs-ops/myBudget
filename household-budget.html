@@ -370,6 +370,11 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 .btn-col-edit:hover { border-color:var(--primary); color:var(--primary); }
 .col-editor-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; }
 .col-editor-row .form-input { flex:1; }
+.modal-app-title {
+  text-align:center; font-size:1.1rem; font-weight:900;
+  color:var(--primary); padding-bottom:14px;
+  border-bottom:1px solid var(--border); margin-bottom:16px;
+}
 
 @media(max-width:900px) {
   .summary-grid { grid-template-columns:repeat(auto-fill,minmax(80px,1fr)); gap:6px; }
@@ -445,6 +450,11 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
       <button class="modal-close" onclick="closeColEditor()">✕</button>
     </div>
     <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">타이틀</label>
+        <input class="form-input" type="text" id="fAppTitle" placeholder="나의 가계부">
+      </div>
+      <div class="form-label" style="margin-bottom:8px;margin-top:4px;">헤더 항목</div>
       <div id="colEditorList"></div>
       <button class="btn-add-detail" onclick="addColRow()" style="margin-top:8px;width:100%;">+ 항목 추가</button>
     </div>
@@ -463,6 +473,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
+      <div class="modal-app-title" id="modalAppTitle">나의 가계부</div>
       <div class="form-row">
         <div class="form-group">
           <label class="form-label">연도</label>
@@ -594,6 +605,23 @@ let DATA = [
 ];
 let editId = null;
 let currentFilter = 'all';
+
+// ── 앱 타이틀 ─────────────────────────
+let APP_TITLE = '나의 가계부';
+function saveAppTitle() {
+  try { localStorage.setItem('hb_title', APP_TITLE); } catch(e){}
+}
+function loadAppTitle() {
+  try {
+    const saved = localStorage.getItem('hb_title');
+    if(saved) APP_TITLE = saved;
+  } catch(e){}
+}
+function applyAppTitle() {
+  document.querySelector('.header-title').textContent = APP_TITLE;
+  document.title = APP_TITLE;
+  document.getElementById('modalAppTitle').textContent = APP_TITLE;
+}
 
 // ── 컬럼 설정 ──────────────────────────
 const DEFAULT_COLUMNS = [
@@ -902,6 +930,7 @@ function closeConfirmOutside(e) {
 
 // ── 컬럼 편집 ────────────────────────
 function openColEditor() {
+  document.getElementById('fAppTitle').value = APP_TITLE;
   const list = document.getElementById('colEditorList');
   list.innerHTML = '';
   COLUMNS.forEach(col=>{
@@ -936,6 +965,8 @@ function removeColRow(btn) {
   btn.closest('.col-editor-row').remove();
 }
 function saveColEditor() {
+  const titleVal = document.getElementById('fAppTitle').value.trim();
+  if(titleVal) { APP_TITLE = titleVal; saveAppTitle(); applyAppTitle(); }
   const rows = document.querySelectorAll('#colEditorList .col-editor-row');
   COLUMNS = [];
   rows.forEach(row=>{
@@ -947,7 +978,7 @@ function saveColEditor() {
   saveColumns();
   closeColEditor();
   render();
-  showToast('✅ 항목이 저장되었습니다.');
+  showToast('✅ 저장되었습니다.');
 }
 
 // ── 토스트 ────────────────────────────
@@ -969,9 +1000,11 @@ function showToast(msg) {
     sel.appendChild(opt);
   }
 })();
+loadAppTitle();
 loadColumns();
 loadData();
 render();
+applyAppTitle();
 </script>
 </body>
 </html>
