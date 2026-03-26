@@ -361,7 +361,6 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 
 /* ── COLUMN EDITOR ── */
 .btn-col-edit {
-  margin-left:auto;
   padding:7px 14px; border-radius:9px;
   border:1.5px solid var(--border);
   background:var(--surface); color:var(--sub);
@@ -396,6 +395,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   </div>
   <div style="display:flex;align-items:center;gap:14px;">
     <div class="header-count" id="totalCount">총 0건</div>
+    <button class="btn-col-edit" onclick="openColEditor()">⚙ 항목 편집</button>
     <button class="btn-header-add" onclick="openAddModal()">＋ 새 항목</button>
   </div>
 </div>
@@ -691,12 +691,6 @@ function renderFilters() {
   sel.value = currentFilter;
   sel.onchange = ()=>{ currentFilter = sel.value==='all' ? 'all' : parseInt(sel.value); render(); };
   sec.appendChild(sel);
-  // 컬럼 편집 버튼
-  const editBtn = document.createElement('button');
-  editBtn.className = 'btn-col-edit';
-  editBtn.textContent = '⚙ 항목 편집';
-  editBtn.onclick = openColEditor;
-  sec.appendChild(editBtn);
 }
 
 function renderTable() {
