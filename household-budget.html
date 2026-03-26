@@ -435,7 +435,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 </div>
 
 <!-- FAB -->
-<button class="fab" onclick="openAddModal()" title="새 항목 추가">＋</button>
+<button class="fab" onclick="openAddModal()" title="추가입력">＋</button>
 
 <!-- COLUMN EDITOR MODAL -->
 <div class="modal-overlay" id="colEditorOverlay" onclick="closeColEditorOutside(event)">
@@ -459,7 +459,7 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 <div class="modal-overlay" id="modalOverlay" onclick="closeModalOutside(event)">
   <div class="modal">
     <div class="modal-header">
-      <div class="modal-title" id="modalTitle">항목 추가</div>
+      <div class="modal-title" id="modalTitle">추가입력</div>
       <button class="modal-close" onclick="closeModal()">✕</button>
     </div>
     <div class="modal-body">
@@ -787,7 +787,7 @@ function buildColInputs(row) {
 
 function openAddModal() {
   editId = null;
-  document.getElementById('modalTitle').textContent = '항목 추가';
+  document.getElementById('modalTitle').textContent = '추가입력';
   document.getElementById('fYear').value = new Date().getFullYear();
   document.getElementById('fMonth').value = new Date().getMonth()+1;
   buildColInputs(null);
