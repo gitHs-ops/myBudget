@@ -1211,6 +1211,12 @@ function showToast(msg) {
     sel.appendChild(opt);
   }
 })();
+// ── 스토리지 버전 체크 (버전 불일치 시 초기화) ──
+const HB_STORAGE_VERSION = '2';
+if(localStorage.getItem('hb_storage_version') !== HB_STORAGE_VERSION) {
+  localStorage.clear();
+  localStorage.setItem('hb_storage_version', HB_STORAGE_VERSION);
+}
 const savedUnit = localStorage.getItem('hb_unit');
 if(savedUnit) UNIT_MODE = savedUnit;
 loadWorkspace();
