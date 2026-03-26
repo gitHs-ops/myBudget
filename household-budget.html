@@ -85,6 +85,13 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   background:var(--primary); border-color:var(--primary);
   color:#fff; box-shadow:0 2px 10px rgba(58,87,232,.3);
 }
+.filter-select {
+  display:none;
+  padding:8px 12px; border-radius:10px;
+  border:1.5px solid var(--border); background:var(--surface);
+  font-family:var(--sans); font-size:.88rem; font-weight:600;
+  color:var(--text); cursor:pointer;
+}
 
 /* ── MAIN TABLE AREA ── */
 .table-section { padding: 18px 32px 60px; }
@@ -357,6 +364,8 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
   .sum-card.card-date { grid-column:1/-1; }
   .app-header,.summary-section,.filter-section,.table-section { padding-left:16px; padding-right:16px; }
   .t-head,.t-row { font-size:.78rem; }
+  .filter-label, .filter-btn { display:none; }
+  .filter-select { display:block; }
 }
 </style>
 </head>
@@ -652,7 +661,7 @@ function renderFilters() {
   const years = [...new Set(DATA.map(d=>d.year))].sort((a,b)=>b-a);
   const sec = document.getElementById('filterSection');
   sec.innerHTML = `<span class="filter-label">연도 필터</span>`;
-  // 전체
+  // 버튼 (데스크탑)
   const allBtn = document.createElement('button');
   allBtn.className = 'filter-btn' + (currentFilter==='all'?' active':'');
   allBtn.textContent = '전체';
@@ -665,6 +674,20 @@ function renderFilters() {
     btn.onclick = ()=>{ currentFilter=y; render(); };
     sec.appendChild(btn);
   });
+  // 드롭다운 (모바일)
+  const sel = document.createElement('select');
+  sel.className = 'filter-select';
+  const allOpt = document.createElement('option');
+  allOpt.value = 'all'; allOpt.textContent = '전체';
+  sel.appendChild(allOpt);
+  years.forEach(y=>{
+    const opt = document.createElement('option');
+    opt.value = y; opt.textContent = y+'년';
+    sel.appendChild(opt);
+  });
+  sel.value = currentFilter;
+  sel.onchange = ()=>{ currentFilter = sel.value==='all' ? 'all' : parseInt(sel.value); render(); };
+  sec.appendChild(sel);
 }
 
 function renderTable() {
