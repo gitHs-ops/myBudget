@@ -881,9 +881,9 @@ function buildColInputs(row) {
     [COLUMNS[i], COLUMNS[i+1]].filter(Boolean).forEach(col=>{
       const grp = document.createElement('div');
       grp.className = 'form-group';
-      const val = row ? (row[col.key] ?? '') : '';
+      const val = row ? (row[col.key] != null ? row[col.key] * 10000 : '') : '';
       grp.innerHTML = `
-        <label class="form-label">${col.label} (만원)</label>
+        <label class="form-label">${col.label} (원)</label>
         <input class="form-input" type="number" data-key="${col.key}" placeholder="0" value="${val}">`;
       rowDiv.appendChild(grp);
     });
@@ -951,7 +951,7 @@ function saveEntry() {
   const month = parseInt(document.getElementById('fMonth').value);
   const colData = {};
   document.querySelectorAll('#colInputs [data-key]').forEach(inp=>{
-    colData[inp.dataset.key] = inp.value !== '' ? parseFloat(inp.value) : null;
+    colData[inp.dataset.key] = inp.value !== '' ? parseFloat(inp.value) / 10000 : null;
   });
   const details = [...document.querySelectorAll('#detailInputs .form-input')]
     .map(i=>i.value.trim()).filter(v=>v);
