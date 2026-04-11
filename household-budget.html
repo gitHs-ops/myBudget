@@ -465,6 +465,9 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
     <div class="header-count" id="totalCount">총 0건</div>
     <button class="btn-col-edit" onclick="openChart()">📈 차트</button>
     <button class="btn-col-edit" onclick="openColEditor()">⚙ 항목 편집</button>
+    <button class="btn-col-edit" onclick="importCsv()">📂 CSV 가져오기</button>
+    <button class="btn-col-edit" onclick="exportCsv()">💾 CSV 내보내기</button>
+    <input type="file" id="csvFileInput" accept=".csv" style="display:none;" onchange="handleCsvFile(event)">
     <button class="btn-header-add" onclick="openAddModal()">＋ 추가입력</button>
   </div>
 </div>
@@ -598,6 +601,144 @@ body { background:linear-gradient(180deg,#167684 0%,#7ed6d3 100%); color:var(--t
 </div>
 
 <script>
+
+// ════════════════════════════════════════
+// CSV 가져오기 / 내보내기
+// ════════════════════════════════════════
+
+// ── CSV 내보내기 ──
+function exportCsv() {
+  if (!DATA.length) { showToast('⚠️ 내보낼 데이터가 없습니다.'); return; }
+  const colKeys  = COLUMNS.map(c => c.key);
+  const colLabels = COLUMNS.map(c => c.label);
+
+  // 헤더: year, month, 컬럼들..., details
+  const headers = ['year', 'month', ...colLabels, 'details'];
+
+  const rows = DATA.map(row => {
+    const cols = colKeys.map(k => row[k] != null ? Math.round(row[k] * 10000) : '');
+    const details = (row.details || []).join(' | ');
+    return [row.year, row.month, ...cols, details];
+  });
+
+  // CSV 문자열 생성
+  const csvLines = [headers, ...rows].map(r =>
+    r.map(v => {
+      const s = String(v ?? '');
+      return s.includes(',') || s.includes('"') || s.includes('\n')
+        ? '"' + s.replace(/"/g, '""') + '"'
+        : s;
+    }).join(',')
+  );
+  const csvStr = '﻿' + csvLines.join('\n'); // BOM 포함 (엑셀 한글 깨짐 방지)
+
+  const blob = new Blob([csvStr], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  const today = new Date();
+  const ds = today.getFullYear() + ('0'+(today.getMonth()+1)).slice(-2) + ('0'+today.getDate()).slice(-2);
+  a.download = `가계부_${APP_TITLE}_${ds}.csv`;
+  a.click();
+  URL.revokeObjectURL(a.href);
+  showToast('✅ CSV 내보내기 완료!');
+}
+
+// ── CSV 가져오기 (파일 선택 트리거) ──
+function importCsv() {
+  document.getElementById('csvFileInput').value = '';
+  document.getElementById('csvFileInput').click();
+}
+
+// ── CSV 파일 읽기 및 데이터 추가 ──
+function handleCsvFile(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function(evt) {
+    try {
+      const text = evt.target.result.replace(/^\uFEFF/, ''); // BOM 제거
+      const lines = text.split(/\r?\n/).filter(l => l.trim());
+      if (lines.length < 2) { showToast('⚠️ 데이터가 없는 CSV 파일입니다.'); return; }
+
+      // 헤더 파싱
+      const headers = parseCsvLine(lines[0]);
+      const yearIdx    = headers.findIndex(h => h.toLowerCase() === 'year');
+      const monthIdx   = headers.findIndex(h => h.toLowerCase() === 'month');
+      const detailsIdx = headers.findIndex(h => h.toLowerCase() === 'details');
+
+      if (yearIdx < 0 || monthIdx < 0) {
+        showToast('⚠️ CSV 헤더에 year, month 컬럼이 필요합니다.'); return;
+      }
+
+      // 컬럼 매핑 (헤더 label → key)
+      const labelToKey = {};
+      COLUMNS.forEach(c => { labelToKey[c.label] = c.key; });
+
+      let addedCount = 0;
+      let skipCount  = 0;
+
+      lines.slice(1).forEach(line => {
+        if (!line.trim()) return;
+        const vals = parseCsvLine(line);
+        const year  = parseInt(vals[yearIdx]);
+        const month = parseInt(vals[monthIdx]);
+        if (isNaN(year) || isNaN(month)) { skipCount++; return; }
+
+        // 중복 체크 (같은 year+month 이미 존재하면 스킵)
+        if (DATA.find(d => d.year === year && d.month === month)) {
+          skipCount++; return;
+        }
+
+        const colData = {};
+        headers.forEach((h, i) => {
+          const key = labelToKey[h];
+          if (key && vals[i] !== '' && vals[i] != null) {
+            const num = parseFloat(vals[i]);
+            if (!isNaN(num)) colData[key] = num / 10000;
+          }
+        });
+
+        const details = detailsIdx >= 0 && vals[detailsIdx]
+          ? vals[detailsIdx].split(' | ').map(s => s.trim()).filter(s => s)
+          : [];
+
+        const newId = DATA.length ? Math.max(...DATA.map(d => d.id)) + 1 : 1;
+        DATA.push({ id: newId, year, month, ...colData, details });
+        addedCount++;
+      });
+
+      saveData();
+      render();
+      let msg = `✅ ${addedCount}건 추가 완료!`;
+      if (skipCount > 0) msg += ` (중복/오류 ${skipCount}건 스킵)`;
+      showToast(msg);
+    } catch(err) {
+      showToast('❌ CSV 파싱 오류: ' + err.message);
+    }
+  };
+  reader.readAsText(file, 'UTF-8');
+}
+
+// ── CSV 한 줄 파싱 (따옴표 처리 포함) ──
+function parseCsvLine(line) {
+  const result = [];
+  let cur = '', inQuote = false;
+  for (let i = 0; i < line.length; i++) {
+    const ch = line[i];
+    if (inQuote) {
+      if (ch === '"' && line[i+1] === '"') { cur += '"'; i++; }
+      else if (ch === '"') { inQuote = false; }
+      else { cur += ch; }
+    } else {
+      if (ch === '"') { inQuote = true; }
+      else if (ch === ',') { result.push(cur.trim()); cur = ''; }
+      else { cur += ch; }
+    }
+  }
+  result.push(cur.trim());
+  return result;
+}
+
 // ════════════════════════════════════════
 // 데이터
 // ════════════════════════════════════════
